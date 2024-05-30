@@ -6,6 +6,7 @@
         <router-link :to="{ name: 'contact.create' }" class="buttonCreate">Create Contact</router-link>
       </div>
       <select name="" class="selectSearch" id="" v-model="keyGender">
+        <option value="">Choice</option>
         <option value="M">Male</option>
         <option value="F">Female</option>
       </select>

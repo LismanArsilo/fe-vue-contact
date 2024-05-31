@@ -41,6 +41,7 @@
 }
 .inputSearch:focus{
   border: 1px solid #fdfdfd;
+  outline: none ;
 }
 
 .buttonCreate{
@@ -59,7 +60,15 @@
 }
 
 .selectSearch{
-  max-width: 5%;
+  max-width: 10%;
+  padding: .6rem;
+  color: #000;
+  border-radius: 1rem;
+  outline: none;
+
+}
+.selectSearch:hover{
+  cursor: pointer;
 }
 
 .bodyContent{
@@ -132,6 +141,12 @@
 .buttonDelete:hover{
   transform: scale(1.02);
   transition: none .5s;
+}
+
+.notFound{
+  position: relative;
+  width: 100%;
+  color: var(--redPrimary);
 }
 
 /* Create Contact */

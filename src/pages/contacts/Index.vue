@@ -24,7 +24,7 @@
             <button class="buttonDelete" @click="deleteContact(contact.id)">Delete</button>
           </div>
         </div>
-
+        <div v-if="contacts.data && contacts.data.length <= 0" class="notFound">Data Not Found</div>
       </div>
     </div>
   </div>
@@ -33,6 +33,7 @@
 <script>
 import axios from 'axios';
 import { onMounted, watch, ref } from 'vue';
+import config from '../../config/config';
 
 export default {
   setup() {
@@ -41,11 +42,9 @@ export default {
     let keySearch = ref("");
     let keyGender = ref("");
 
-    const url = "http://127.0.0.1:8000/api";
-
     const getContact = async () => {
       try {
-        const response = await axios.get(url + `/contact?keyword=${keySearch.value}&gender=${keyGender.value}`);
+        const response = await axios.get(config.apiUrl + `/contact?keyword=${keySearch.value}&gender=${keyGender.value}`);
         const dataResult = response.data.contacts;
         contacts.value = dataResult;
       } catch (error) {
@@ -53,16 +52,9 @@ export default {
       }
     }
 
-    const searchContact = () => {
-      const filteredContacts = contacts.value.filter(contact => {
-        return contact.name.toLowerCase().includes(keySearch.value.toLowerCase());
-      });
-      return filteredContacts;
-    }
-
     const deleteContact = async (id) => {
       try {
-        const response = await axios.delete(url + "/contact/" + id);
+        await axios.delete(config.apiUrl + "/contact/" + id);
         contacts.value.data = contacts.value.data.filter(contact => contact.id !== id);
       } catch (error) {
         console.error(error.message);
@@ -73,17 +65,12 @@ export default {
       getContact();
     });
 
-    watch(keySearch, () => {
-      getContact();
-    });
-
-    watch(keyGender, () => {
+    watch([keySearch, keyGender], () => {
       getContact();
     });
 
     return {
       contacts,
-      searchContact,
       deleteContact,
       keySearch,
       keyGender

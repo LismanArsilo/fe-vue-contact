@@ -52,6 +52,7 @@
 import { reactive, ref, onMounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import axios from 'axios';
+import config from "../../config/config"
 
 export default {
   setup() {
@@ -71,7 +72,7 @@ export default {
 
     onMounted(async () => {
       try {
-        const response = await axios.get(`${url}/contact/${route.params.id}`);
+        const response = await axios.get(`${config.apiUrl}/contact/${route.params.id}`);
         const resultData = response.data.contact
         contact.name = resultData.name;
         contact.phone_number = resultData.phone_number;
@@ -85,7 +86,7 @@ export default {
 
     const updateContact = async () => {
       try {
-        const response = await axios.put(`${url}/contact/${route.params.id}`, contact);
+        const response = await axios.put(`${config.apiUrl}/contact/${route.params.id}`, contact);
         router.push({
           name: 'contact.index'
         })

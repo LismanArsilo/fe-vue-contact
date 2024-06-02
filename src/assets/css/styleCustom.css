@@ -149,6 +149,51 @@
   color: var(--redPrimary);
 }
 
+.boxPaginate{
+  color: #fff;
+  display: flex;
+  justify-content: end;
+  align-items: center;
+  gap: 1rem;
+}
+
+.back, .next{
+  font-weight: 600;
+  cursor: pointer;
+}
+.back:hover, .next:hover{
+  transform: scale(1.2);
+  transition: all .5s;
+  color: var(--redPrimary);
+}
+
+.boxPaginateCount{
+  display: flex;
+  gap: .5rem;
+}
+
+.currentPage{
+
+}
+
+.currentPage::after{
+  content: '/';
+  margin: 0 1rem;
+}
+
+.countPage{
+  font-weight: 900;
+}
+
+.goToPage{
+  border: 1px solid #fff;
+  width: 4rem;
+  text-align: center;
+}
+
+
+
+
 /* Create Contact */
 .bodyContentCreate{
   display: flex;

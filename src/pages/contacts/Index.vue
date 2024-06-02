@@ -26,6 +26,15 @@
         </div>
         <div v-if="contacts.data && contacts.data.length <= 0" class="notFound">Data Not Found</div>
       </div>
+      <div class="boxPaginate">
+        <span class="back" :disabled="contacts.current_page === 1" @click="changePage(contacts.current_page - 1)">
+          << </span>
+            <div class="boxPaginateCount">
+              <span class="currentPage">{{ contacts.current_page }}</span>
+              <span class="countPage">{{ contacts.last_page }}</span>
+            </div>
+            <span class="next" @click="changePage(contacts.current_page + 1)">>></span>
+      </div>
     </div>
   </div>
 </template>
@@ -41,28 +50,50 @@ export default {
     let contacts = ref([]);
     let keySearch = ref("");
     let keyGender = ref("");
+    let perviousPage = ref("");
+    let nextPage = ref("");
+    let currentPage = ref(1);
+    let countPage = ref(0);
 
     const getContact = async () => {
       try {
-        const response = await axios.get(config.apiUrl + `/contact?keyword=${keySearch.value}&gender=${keyGender.value}`);
+        const response = await axios.get(config.apiUrl + `/contact`, {
+          params: {
+            keyword: keySearch.value,
+            gender: keyGender.value,
+            page: currentPage.value
+          }
+        });
         const dataResult = response.data.contacts;
         contacts.value = dataResult;
+        countPage.value = dataResult.last_page;
       } catch (error) {
         console.error(error.message);
+      }
+    }
+
+    const changePage = (page) => {
+      if (page >= 1 && page <= countPage.value) {
+        currentPage.value = page;
+        getContact();
       }
     }
 
     const deleteContact = async (id) => {
-      try {
-        await axios.delete(config.apiUrl + "/contact/" + id);
-        contacts.value.data = contacts.value.data.filter(contact => contact.id !== id);
-      } catch (error) {
-        console.error(error.message);
+      if (confirm("Are you sure you want to delete ?")) {
+        try {
+          await axios.delete(config.apiUrl + "/contact/" + id);
+          contacts.value.data = contacts.value.data.filter(contact => contact.id !== id);
+          await getContact();
+        } catch (error) {
+          console.error(error.message);
+        }
       }
     }
 
-    onMounted(() => {
-      getContact();
+
+    onMounted(async () => {
+      await getContact();
     });
 
     watch([keySearch, keyGender], () => {
@@ -73,7 +104,8 @@ export default {
       contacts,
       deleteContact,
       keySearch,
-      keyGender
+      keyGender,
+      changePage
     }
   }
 }
